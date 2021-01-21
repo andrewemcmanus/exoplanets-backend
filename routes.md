@@ -8,6 +8,6 @@
   saved models
   user comment/submission
 
-##PUT:
+###PUT:
   delete a comment/submission
   (mongo required this based on previous design `$pull` from comments array)
