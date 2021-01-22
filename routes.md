@@ -5,9 +5,12 @@
 
 ###GET:
   current user,
+  models,
   saved models,
   user comment/submission
 
 ###DELETE:
   delete a comment/submission
-  (mongo required this based on previous design `$pull` from comments array)
+
+###PUT:
+  update a comment/submission?
