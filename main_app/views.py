@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Exoplanets
+from .models import Visual
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
@@ -54,9 +54,11 @@ def signup(request):
       return HttpResponseRedirect('/user/' + str(user))
     else:
       form = UserCreationForm()
+      # DON'T render a new page...
       return render(request, 'signup.html', {'form': form})
   else:
     form = UserCreationForm()
+    # DON'T render a new page...
     return render(request, 'signup.html', {'form': form})
 
 def visuals_index(request):
@@ -64,11 +66,11 @@ def visuals_index(request):
     return HttpResponse()
 
 def database(request):
-    print(request)
     if request.method == 'GET':
-        response = request.get("https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=compositepars&format=json&select=fpl_hostname, fst_lum, fst_met, fpl_eqt, fst_teff, fst_optmag, fst_logg, fst_mass, fpl_radj, fpl_bmassj, fpl_eccen, fpl_dens, fpl_orbper, fpl_smax")
+        response = request.POST.get('https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=compositepars&format=json&select=fpl_hostname')
+        return JsonResponse(response, safe=False)
+    # print(response)
         # if/then/else forcertain model parameters go here:
-    return JsonResponse(response, safe=False)
 
 # if request.method == 'GET':
 #     parameters = []
