@@ -70,11 +70,18 @@ def get_users(request):
 # GET submissions WHERE system_name = current page
 # requires a route for displaying a given system_name...
 
+def get_system(request, system_name):
+    system = Visual.objects.all().values('system_name')
+    system_list = list(systems)
+    for i in range(len(system_list)):
+        if system_name == system_list[i]:
+            return JsonResponse(system_name, safe=False)
+
+
 def get_submissions(request, system_name):
     content = Notes.objects.all().values('content')
     content_list = list(content)
     return JsonResponse(content_list, safe=False)
-
 
 def get_system_list(request):
     systems = Visual.objects.all().values('system_name')
@@ -86,11 +93,14 @@ def get_system_list(request):
         # access CONTENT column from Notes database
 
 class CreateSubmissions(CreateView):
+    # user = User.objects.get(username=username)
     model = Notes
-    fields = '__all__'
+    # How to do a request for submissions??
+    fields = ['content']
     success_url = '/submissions'
 
 class UpdateSubmissions(UpdateView):
+    # username = User.objects.get(username=username)
     model = Notes
     fields = ['content']
 

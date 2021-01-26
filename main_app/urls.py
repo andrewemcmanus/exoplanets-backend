@@ -8,11 +8,12 @@ urlpatterns = [
     path('login/', views.login_view, name="login_view"),
     path('signup/', views.signup, name="signup"),
     path('users/', views.get_users, name="users"),
-    path('users/<username>/', views.profile, name="profile"),
+    path('users/<str:username>/', views.profile, name="profile"),
     path('systems/', views.get_system_list, name='systems'),
+    # path('systems/<str:system_name>', views.get_system, name='get_system'),
     path('submissions/', views.get_submissions, name='submissions'),
     path('submissions/create', views.CreateSubmissions.as_view(), name='create_submissions'),
-    path('submissions/<username>/update', views.UpdateSubmissions.as_view(), name='update_submissions'),
+    path('submissions/<str:username>/update', views.UpdateSubmissions.as_view(), name='update_submissions'),
     path('submissions/delete/<int:pk>', views.DeleteSubmissions.as_view(), name='delete_submissions')
 
     # path('database/', views.database, name="database")

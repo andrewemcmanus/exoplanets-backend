@@ -9,22 +9,16 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import os
 from pathlib import Path
-
-
+# SECRET_KEY = os.getenv("SECRET_KEY")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = process.env.SECRET_KEY
-
-
-
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -33,14 +27,15 @@ DEBUG = True
 ALLOWED_HOSTS = [ '*' ]
 CORS_ORIGIN_ALLOW_ALL = True;
 # CORS_ORIGIN_WHITELIST = (
-    # 'http://127.0.0.1',
-    # 'http://localhost'
+#     'http://127.0.0.1',
+#     'http://localhost'
 # )
 # ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'main_app',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -48,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders'
+
     # CORS?
 ]
 
