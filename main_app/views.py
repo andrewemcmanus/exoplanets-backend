@@ -1,15 +1,11 @@
 from django.shortcuts import render
-from .models import Visual
+from .models import Visual, User, Notes
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate, login, logout
-# from psycopg2.extras import Json
-# conn = psycopg2.connect("dbname=Visual")
-# cur = conn.cursor()
 
-# Create your views here.
 def index(request):
   return render(request, 'index.html')
 
@@ -19,8 +15,8 @@ def about(request):
 ########## USER ##############
 def profile(request, username):
   user = User.objects.get(username=username)
-  # cats = Cat.objects.filter(user=user)
-  return render(request, 'profile.html', {'username': username})
+  visuals_index = User.objects.get(saved_visuals=saved_visuals)
+  return render(request, 'profile.html', {'username': user, 'visuals_index': visuals_index})
 
 def login_view(request):
   # if post, then authenticate (the user will be submitting a username and password)
@@ -45,7 +41,7 @@ def login_view(request):
 
 def logout_view(request):
   logout(request)
-  return HttpResponseRedirect('/cats')
+  return HttpResponseRedirect('/')
 
 def signup(request):
   if request.method == 'POST':
@@ -64,60 +60,45 @@ def signup(request):
     # DON'T render a new page...
     return render(request, 'signup.html', {'form': form})
 
-def visuals_index(request):
-    visuals = Visual.objects.all()
-    return HttpResponse()
+# REMAINING ROUTES:
 
-# def database(request):
-#     if request.method == 'GET':
-        # item = {
-        #         "fpl_hostname": "GJ 163",
-        #         "fst_lum": -1.708,
-        #         "fst_met": 0.100,
-        #         "fpl_eqt": 0,
-        #         "fst_teff": 3500.00,
-        #         "fst_optmag": 11.810,
-        #         "fst_logg": 0,
-        #         "fst_mass": 0.40,
-        #         "fpl_radj": 0.290,
-        #         "fpl_eccen": 0.073000,
-        #         "fpl_dens": 1.70000,
-        #         "fpl_orbper": 8.63182000,
-        #         "fpl_smax": 0.060700
-        #     }
-        #
-        # def sql_insert(tableName, data_dict):
-        #     '''
-        #     INSERT INTO Visual (system_name, star_lum, star_metal, planet_eqtemp, star_efftemp, star_optmag, star_grav, star_mass, planet_rad, planet_eccen, planet_dens, planet_orb_per, planet_smaxis)
-        #     VALUES (%(fpl_hostname)s, %(fst_lum)s, %(fst_met)s, %(fpl_eqt)s, %(fst_teff)s, %(fst_optmag)s, %(fst_logg)s, %(fst_mass)s, %(fpl_radj)s, %(fpl_eccen)s, %(fpl_dens)s, %(fpl_orbper)s, %(fpl_smax)s);
-        #     '''
-        #     sql = '''
-        #         INSERT INTO %s (%s)
-        #         VALUES (%%(%s)s );
-        #         '''   % (tableName, ',  '.join(data_dict),  ')s, %('.join(data_dict))
-        #     return sql
-        #
-        # tableName = 'Visual'
-        # sql = sql_insert(tableName, item)
-        # cur.execute(sql, item)
-        # urllib.request.urlopen('https://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=compositepars&format=json&select=fpl_hostname')
-        # return JsonResponse(response, safe=False)
-    # print(response)
-        # if/then/else forcertain model parameters go here:
+def get_users(request):
+    users = User.objects.all().values('username')  # or simply .values() to get all fields
+    users_list = list(users)  # important: convert the QuerySet to a list object
+    return JsonResponse(users_list, safe=False)
 
-# if request.method == 'GET':
-#     parameters = []
-#     for i in range(len(response)):
-#         system_name =
-#         star_lum =
-#         star_metal =
-#         planet_eqtemp =
-#         star_efftemp =
-#         star_optmag =
-#         star_grav =
-#         star_mass =
-#         planet_rad =
-#         planet_eccen =
-#         planet_dens =
-#         planet_orbper =
-#         planet_smaxis =
+# GET submissions WHERE system_name = current page
+# requires a route for displaying a given system_name...
+
+def get_submissions(request, system_name):
+    content = Notes.objects.all().values('content')
+    content_list = list(content)
+    return JsonResponse(content_list, safe=False)
+
+
+def get_system_list(request):
+    systems = Visual.objects.all().values('system_name')
+    system_list = list(systems)
+    return JsonResponse(system_list, safe=False)
+
+# def add_submissions(request):
+#     if request.method == 'POST':
+        # access CONTENT column from Notes database
+
+class CreateSubmissions(CreateView):
+    model = Notes
+    fields = '__all__'
+    success_url = '/submissions'
+
+class UpdateSubmissions(UpdateView):
+    model = Notes
+    fields = ['content']
+
+    def form_valid(self, form):
+        print(self)
+        self.object = form.save(commit=False)
+        return HttpResponseRedirect()
+
+class DeleteSubmissions(DeleteView):
+    model = Notes
+    success_url = '/submissions'
