@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from .models import Visual, User, Notes
+from .models import Visual, Notes
+from rest_framework import viewsets, serializers
+from .serializers import VisualSerializer
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
@@ -112,3 +114,7 @@ class UpdateSubmissions(UpdateView):
 class DeleteSubmissions(DeleteView):
     model = Notes
     success_url = '/submissions'
+
+class VisualView(viewsets.ModelViewSet):
+    serializer_class = VisualSerializer
+    queryset = Visual.objects.all()

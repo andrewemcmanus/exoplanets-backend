@@ -1,5 +1,9 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework import routers
+router = routers.DefaultRouter()
+router.register(r"visuals", views.VisualView, 'visuals')
+print(type(router.urls))
 
 urlpatterns = [
     # path('admin/', admin.site.urls)
@@ -9,7 +13,8 @@ urlpatterns = [
     path('signup/', views.signup, name="signup"),
     path('users/', views.get_users, name="users"),
     path('users/<str:username>/', views.profile, name="profile"),
-    path('systems/', views.get_system_list, name='systems'),
+    # path('systems/', views.get_system_list, name='systems'),
+    path('api/', include(router.urls)),
     # path('systems/<str:system_name>', views.get_system, name='get_system'),
     path('submissions/', views.get_submissions, name='submissions'),
     path('submissions/create', views.CreateSubmissions.as_view(), name='create_submissions'),
