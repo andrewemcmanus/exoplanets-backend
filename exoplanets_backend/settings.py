@@ -25,17 +25,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 # turning off DEBUG doesn't work...
 ALLOWED_HOSTS = [ '*' ]
-CORS_ORIGIN_ALLOW_ALL = True;
-# CORS_ORIGIN_WHITELIST = (
-#     'http://127.0.0.1',
-#     'http://localhost'
-# )
+CORS_ORIGIN_ALLOW_ALL = False;
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1',
+    'http://localhost'
+)
 # ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
     'corsheaders',
+    'rest_framework',
     'main_app',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,11 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # CORS?
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+
 ]
 
 ROOT_URLCONF = 'exoplanets_backend.urls'
