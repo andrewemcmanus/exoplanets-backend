@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Visual, Notes
 from rest_framework import viewsets, serializers
-from .serializers import VisualSerializer
+from .serializers import VisualSerializer, UserSerializer
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
@@ -52,6 +52,7 @@ def signup(request):
       user = form.save()
       print(user)
       login(request, user)
+      # are these the source of the 500 error when I try to create a user
       return HttpResponseRedirect('/user/' + str(user))
     else:
       form = UserCreationForm()
@@ -60,9 +61,8 @@ def signup(request):
   else:
     form = UserCreationForm()
     # DON'T render a new page...
-    return render(request, 'signup.html', {'form': form})
+    return JsonResponse({'form': form})
 
-# REMAINING ROUTES:
 
 def get_users(request):
     users = User.objects.all().values('username')  # or simply .values() to get all fields
@@ -79,16 +79,15 @@ def get_system(request, system_name):
         if system_name == system_list[i]:
             return JsonResponse(system_name, safe=False)
 
+# def get_submissions(request, system_name):
+#     content = Notes.objects.all().values('content')
+#     content_list = list(content)
+#     return JsonResponse(content_list, safe=False)
 
-def get_submissions(request, system_name):
-    content = Notes.objects.all().values('content')
-    content_list = list(content)
-    return JsonResponse(content_list, safe=False)
-
-def get_system_list(request):
-    systems = Visual.objects.all().values('system_name')
-    system_list = list(systems)
-    return JsonResponse(system_list, safe=False)
+# def get_system_list(request):
+#     systems = Visual.objects.all().values('system_name')
+#     system_list = list(systems)
+#     return JsonResponse(system_list, safe=False)
 
 # def add_submissions(request):
 #     if request.method == 'POST':
@@ -118,3 +117,7 @@ class DeleteSubmissions(DeleteView):
 class VisualView(viewsets.ModelViewSet):
     serializer_class = VisualSerializer
     queryset = Visual.objects.all()
+
+class UserView(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()

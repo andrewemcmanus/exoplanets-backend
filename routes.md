@@ -13,4 +13,4 @@
   delete a comment/submission
 
 ###PUT:
-  update a comment/submission?
+  update a comment/submission
