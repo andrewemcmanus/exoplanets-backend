@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Visual, Notes
 from rest_framework import viewsets, serializers
-from .serializers import VisualSerializer, UserSerializer
+from .serializers import VisualSerializer, UserSerializer, NotesSerializer
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
@@ -125,3 +125,7 @@ class VisualView(viewsets.ModelViewSet):
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+class NotesView(viewsets.ModelViewSet):
+    serializer_class = NotesSerializer
+    queryset = Notes.objects.all()

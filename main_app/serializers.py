@@ -1,6 +1,6 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
-from rest_framework import serializers
 from .models import Visual, User, Notes
 from rest_framework.validators import UniqueValidator
 
@@ -12,7 +12,7 @@ class VisualSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     # profile = ProfileSerializer()
     class Meta:
-        model: User
+        model = User
         fields = '__all__'
 
     # def create(self, validated_data):
@@ -23,5 +23,5 @@ class UserSerializer(serializers.ModelSerializer):
 
 class NotesSerializer(serializers.ModelSerializer):
     class Meta:
-        model: Notes
+        model = Notes
         fields = '__all__'

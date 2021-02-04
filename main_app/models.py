@@ -18,21 +18,21 @@ class Visual(models.Model):
     planet_smaxis = models.FloatField()
 
     def __str__(self):
-        return self.name
+        return self.system_name
 
 class User(models.Model):
     username = models.CharField(max_length=100, null=True)
     email = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
-    saved_visuals = models.ManyToManyField(Visual)
+    # saved_visuals = models.ManyToManyField(Visual)
 
     def __str__(self):
-        return self.name
+        return self.username
 
 class Notes(models.Model):
-    username = models.ForeignKey(User, on_delete=models.CASCADE)
-    system_name = models.ForeignKey(Visual, on_delete=models.CASCADE)
+    username = models.ManyToManyField(User);
+    system_name = models.ManyToManyField(Visual);
     content = models.CharField(max_length=5000)
 
     def __str__(self):
-        return self.name
+        return self.content

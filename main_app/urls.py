@@ -5,6 +5,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r"visuals", views.VisualView, 'visuals')
 router.register(r"user", views.UserView, 'user')
+router.register(r"notes", views.NotesView, 'notes')
 print(type(router.urls))
 
 urlpatterns = [
