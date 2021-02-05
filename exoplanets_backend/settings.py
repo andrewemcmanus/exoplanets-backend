@@ -13,8 +13,14 @@ import django_heroku
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from corsheaders.defaults import default_headers
 exoplanets_backend = os.path.expanduser('./exoplanets_backend')  # a
 load_dotenv(os.path.join(exoplanets_backend, 'keys.py'))
+
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-CSRFTOKEN',
+]
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 

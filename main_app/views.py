@@ -9,6 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import TemplateView
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 index = never_cache(TemplateView.as_view(template_name='index.html'))
 
@@ -24,6 +25,7 @@ def profile(request, username):
   visuals_index = User.objects.get(saved_visuals=saved_visuals)
   return render(request, 'profile.html', {'username': user, 'visuals_index': visuals_index})
 
+@ensure_csrf_cookie
 def login_view(request):
   # if post, then authenticate (the user will be submitting a username and password)
   if request.method == 'POST':
@@ -49,23 +51,23 @@ def logout_view(request):
   logout(request)
   return HttpResponseRedirect('/')
 
+# @ensure_csrf_cookie
 def signup(request):
   if request.method == 'POST':
     form = UserCreationForm(request.POST)
+    print(form)
     if form.is_valid():
       user = form.save()
-      print(user)
       login(request, user)
-      # are these the source of the 500 error when I try to create a user
       return HttpResponseRedirect('/user/' + str(user))
     else:
       form = UserCreationForm()
       # DON'T render a new page...
-      return render(request, 'signup.html', {'form': form})
+      return HttpResponseRedirect('/signup/')
   else:
     form = UserCreationForm()
     # DON'T render a new page...
-    return JsonResponse({'form': form})
+    return JsonResponse(form, safe=False)
 
 
 def get_users(request):
@@ -97,14 +99,14 @@ def get_system(request, system_name):
 #     if request.method == 'POST':
         # access CONTENT column from Notes database
 
-class CreateSubmissions(CreateView):
+class CreateNotes(CreateView):
     # user = User.objects.get(username=username)
     model = Notes
     # How to do a request for submissions??
     fields = ['content']
-    success_url = '/submissions'
+    success_url = '/submissions/'
 
-class UpdateSubmissions(UpdateView):
+class UpdateNotes(UpdateView):
     # username = User.objects.get(username=username)
     model = Notes
     fields = ['content']
@@ -114,9 +116,9 @@ class UpdateSubmissions(UpdateView):
         self.object = form.save(commit=False)
         return HttpResponseRedirect()
 
-class DeleteSubmissions(DeleteView):
+class DeleteNotes(DeleteView):
     model = Notes
-    success_url = '/submissions'
+    success_url = '/submissions/'
 
 class VisualView(viewsets.ModelViewSet):
     serializer_class = VisualSerializer
