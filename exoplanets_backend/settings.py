@@ -16,12 +16,6 @@ from dotenv import load_dotenv
 from corsheaders.defaults import default_headers
 exoplanets_backend = os.path.expanduser('./exoplanets_backend')  # a
 load_dotenv(os.path.join(exoplanets_backend, 'keys.py'))
-
-
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    'X-CSRFTOKEN',
-]
-
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,7 +36,11 @@ CORS_ORIGIN_ALLOW_ALL = True;
     # 'http://localhost'
 # )
 # ALLOWED_HOSTS = ['*']
-
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'X-CSRFToken',
+]
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_HEADER_NAME = 'X-CSRFToken'
 # Application definition
 
 INSTALLED_APPS = [

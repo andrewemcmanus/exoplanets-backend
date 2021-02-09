@@ -45,7 +45,7 @@ def login_view(request):
         print('The username and/or password is incorrect.')
   else: # get request that sent up empty form
     form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'login', {'form': form})
 
 def logout_view(request):
   logout(request)
@@ -58,15 +58,18 @@ def signup(request):
     print(form)
     if form.is_valid():
       user = form.save()
+      print(user)
       login(request, user)
       return HttpResponseRedirect('/user/' + str(user))
     else:
       form = UserCreationForm()
+      # print(form)
       # DON'T render a new page...
       return HttpResponseRedirect('/signup/')
   else:
     form = UserCreationForm()
     # DON'T render a new page...
+    print(form)
     return JsonResponse(form, safe=False)
 
 
@@ -119,6 +122,11 @@ class UpdateNotes(UpdateView):
 class DeleteNotes(DeleteView):
     model = Notes
     success_url = '/submissions/'
+
+class CreateUser(CreateView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    # permission_classes = (AllowAny, )
 
 class VisualView(viewsets.ModelViewSet):
     serializer_class = VisualSerializer

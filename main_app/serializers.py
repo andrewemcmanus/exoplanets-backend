@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
-from .models import Visual, User, Notes
+from .models import Visual, Notes
 from rest_framework.validators import UniqueValidator
 
 class VisualSerializer(serializers.ModelSerializer):
@@ -15,11 +15,12 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
-    # def create(self, validated_data):
-        # profile_data = validated_data.pop('profile')
-        # user = User.objects.create(**validated_data)
-        # Profile.objects.create(user=user, **profile_data)
-        # return user
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User.objects.create(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
 class NotesSerializer(serializers.ModelSerializer):
     class Meta:
