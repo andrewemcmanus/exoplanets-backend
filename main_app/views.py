@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import Visual, Notes
 from rest_framework import viewsets, serializers
-from .serializers import VisualSerializer, UserSerializer, NotesSerializer
+from .serializers import VisualSerializer, UserSerializer, NotesSerializer, UserLoginSerializer
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
@@ -24,8 +24,9 @@ def profile(request, username):
   user = User.objects.get(username=username)
   visuals_index = User.objects.get(saved_visuals=saved_visuals)
   return render(request, 'profile.html', {'username': user, 'visuals_index': visuals_index})
+  # CHANGE RENDER
 
-@ensure_csrf_cookie
+# @ensure_csrf_cookie
 def login_view(request):
   # if post, then authenticate (the user will be submitting a username and password)
   if request.method == 'POST':
@@ -45,7 +46,8 @@ def login_view(request):
         print('The username and/or password is incorrect.')
   else: # get request that sent up empty form
     form = AuthenticationForm()
-    return render(request, 'login', {'form': form})
+    # return render(request, 'login', {'form': form})
+    return HttpResponseRedirect('/')
 
 def logout_view(request):
   logout(request)
@@ -134,6 +136,10 @@ class VisualView(viewsets.ModelViewSet):
 
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+class UserLoginView(viewsets.ModelViewSet):
+    serializer_class = UserLoginSerializer
     queryset = User.objects.all()
 
 class NotesView(viewsets.ModelViewSet):

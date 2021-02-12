@@ -6,13 +6,14 @@ router = routers.DefaultRouter()
 router.register(r"visuals", views.VisualView, 'visuals')
 router.register(r"user", views.UserView, 'user')
 router.register(r"notes", views.NotesView, 'notes')
-print(type(router.urls))
+router.register(r"login", views.UserLoginView, 'login')
+# print(type(router.urls))
 
 urlpatterns = [
     # path('admin/', admin.site.urls)
     path('', views.index, name="index"),
     # path('about/', views.about, name="about"),
-    path('login/', views.login_view, name="login_view"),
+    # path('login/', views.login_view, name="login_view"),
     path('signup/', views.signup, name="signup"),
     # path('users/', views.get_users, name="users"),
     # path('users/<str:username>/', views.profile, name="profile"),
