@@ -37,24 +37,24 @@ class UserLoginSerializer(serializers.ModelSerializer):
     # token = serializers.CharField(max_length=255, read_only=True)
     def login_view(request):
       # if post, then authenticate (the user will be submitting a username and password)
-      if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
-        if form.is_valid():
+      print(request)
+      form = AuthenticationForm(request, request.POST)
+      if form.is_valid():
           u = form.cleaned_data['email']
           p = form.cleaned_data.get('password')
           user = authenticate(username=u, password=p)
           if user is not None:
             if user.is_active:
-              login(request, user)
+                 login(request, user)
               # return HttpResponseRedirect('/user/' + u)
             else:
-              print(f"The account for {u} has been disabled.")
-          else:
-            print('The username and/or password is incorrect.')
-      else: # get request that sent up empty form
-        form = AuthenticationForm()
-        # return render(request, 'login', {'form': form})
-        return form
+                print(f"The account for {u} has been disabled.")
+      else:
+        print('The username and/or password is incorrect.')
+      # else: # get request that sent up empty form
+      #   form = AuthenticationForm()
+      #   # return render(request, 'login', {'form': form})
+      #   return form
 
     # def validate(self, validated_data):
     #     email = validated_data.get("email", None)
