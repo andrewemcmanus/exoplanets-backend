@@ -46,7 +46,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
           if user is not None:
             if user.is_active:
                  login(request, user)
-              # return HttpResponseRedirect('/user/' + u)
+                 print("User is active.")
             else:
                 print(f"The account for {u} has been disabled.")
       else:
