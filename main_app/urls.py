@@ -8,6 +8,7 @@ router.register(r"user", views.UserView, 'user')
 router.register(r"notes", views.NotesView, 'notes')
 router.register(r"login", views.UserLoginView, 'login')
 # print(type(router.urls))
+# is "login" actually correct here? POST request to api/login still doesn't work
 
 urlpatterns = [
     # path('admin/', admin.site.urls)
